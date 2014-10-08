@@ -58,6 +58,26 @@ Input::~Input()
 {
 }
 
+#if 1
+int64_t Input::calcPts(AVStream * stream, int64_t pts)
+{
+	if (!stream) {
+		return INVALID_PTS_VALUE;
+	}
+
+	if (pts == AV_NOPTS_VALUE)
+		pts = INVALID_PTS_VALUE;
+	else if (avfc->start_time == AV_NOPTS_VALUE)
+		pts = 90000.0 * (double) pts * av_q2d(stream->time_base);
+	else
+		pts = 90000.0 * (double) pts * av_q2d(stream->time_base) - 90000.0 * avfc->start_time / AV_TIME_BASE;
+
+	if (pts & 0x8000000000000000ull)
+		pts = INVALID_PTS_VALUE;
+
+	return pts;
+}
+#else
 int64_t Input::calcPts(AVStream * stream, int64_t pts)
 {
 	if (pts == AV_NOPTS_VALUE)
@@ -70,8 +90,11 @@ int64_t Input::calcPts(AVStream * stream, int64_t pts)
 	if (pts < 0)
 		return INVALID_PTS_VALUE;
 
+	if (pts & 0x8000000000000000ull)
+		pts = INVALID_PTS_VALUE;
 	return pts;
 }
+#endif
 
 // from neutrino-mp/lib/libdvbsubtitle/dvbsub.cpp
 extern void dvbsub_write(AVSubtitle *, int64_t);
@@ -657,7 +680,6 @@ bool Input::GetMetadata(std::vector<std::string> &keys, std::vector<std::string>
 
 	if (avfc) {
 		AVDictionaryEntry *tag = NULL;
-
 		if (avfc->metadata)
 			while ((tag = av_dict_get(avfc->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
 				keys.push_back(tag->key);
@@ -675,6 +697,20 @@ bool Input::GetMetadata(std::vector<std::string> &keys, std::vector<std::string>
 				keys.push_back(tag->key);
 				values.push_back(tag->value);
 			}
+
+		// find the first attached picture, if available
+		for(unsigned int i = 0; i < avfc->nb_streams; i++) {
+			if (avfc->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+			AVPacket *pkt = &avfc->streams[i]->attached_pic;
+			FILE *cover_art = fopen("/tmp/cover.jpg", "wb");
+			if (cover_art) {
+				fwrite(pkt->data, pkt->size, 1, cover_art);
+				fclose(cover_art);
+			}
+			av_free_packet(pkt);
+			break;
+			}
+		}
 	}
 	return true;
 }
