@@ -1,3 +1,4 @@
+#define __USE_FILE_OFFSET64 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,8 +74,8 @@ bool cPlayback::Start(char *filename, int vpid, int vtype, int apid, int ac3, in
 
 	if (player->Open(file.c_str(), no_probe)) {
 		if (pm == PLAYMODE_TS) {
-			struct stat s;
-			if (!stat(file.c_str(), &s))
+			struct stat64 s;
+			if (!stat64(file.c_str(), &s))
 				last_size = s.st_size;
 			ret = true;
 			videoDecoder->Stop(false);
@@ -192,7 +193,7 @@ bool cPlayback::SetSpeed(int speed)
 
 bool cPlayback::GetSpeed(int &speed) const
 {
-        speed = nPlaybackSpeed;
+	speed = nPlaybackSpeed;
 	return true;
 }
 
@@ -209,12 +210,12 @@ bool cPlayback::GetPosition(int &position, int &duration)
 	/* hack: if the file is growing (timeshift), then determine its length
 	 * by comparing the mtime with the mtime of the xml file */
 	if (pm == PLAYMODE_TS) {
-		struct stat s;
-		if (!stat(fn_ts.c_str(), &s)) {
+		struct stat64 s;
+		if (!stat64(fn_ts.c_str(), &s)) {
 			if (!playing || last_size != s.st_size) {
 				last_size = s.st_size;
 				time_t curr_time = s.st_mtime;
-				if (!stat(fn_xml.c_str(), &s)) {
+				if (!stat64(fn_xml.c_str(), &s)) {
 					duration = (curr_time - s.st_mtime) * 1000;
 					if (!playing)
 						return true;
@@ -329,6 +330,28 @@ int cPlayback::GetFirstTeletextPid(void)
 			return it->pid;
 	}
 	return -1;
+}
+
+/* dummy functions for subtitles */
+void cPlayback::FindAllSubs(uint16_t * /*pids*/, unsigned short * /*supp*/, uint16_t *num, std::string * /*lang*/)
+{
+	*num = 0;
+}
+
+bool cPlayback::SelectSubtitles(int pid)
+{
+	return false;
+}
+
+void cPlayback::GetTitles(std::vector<int> &playlists, std::vector<std::string> &titles, int &current)
+{
+	playlists.clear();
+	titles.clear();
+	current = 0;
+}
+
+void cPlayback::SetTitle(int /*title*/)
+{
 }
 
 void cPlayback::GetChapters(std::vector<int> &positions, std::vector<std::string> &titles)
