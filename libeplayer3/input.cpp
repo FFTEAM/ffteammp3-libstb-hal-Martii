@@ -90,8 +90,6 @@ int64_t Input::calcPts(AVStream * stream, int64_t pts)
 	if (pts < 0)
 		return INVALID_PTS_VALUE;
 
-	if (pts & 0x8000000000000000ull)
-		pts = INVALID_PTS_VALUE;
 	return pts;
 }
 #endif
