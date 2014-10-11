@@ -268,10 +268,8 @@ void init_td_api()
 	{
 		cCpuFreqManager f;
 		f.SetCpuFreq(0);	/* CPUFREQ == 0 is the trigger for leaving standby */
-#if 0
 		create_input_devices();
 		start_inmux_thread();
-#endif
 
 		/* this is a strange hack: the drivers seem to only work correctly after
 		 * demux0 has been used once. After that, we can use demux1,2,... */
@@ -290,11 +288,8 @@ void init_td_api()
 			ioctl(dmx, DMX_STOP);
 			close(dmx);
 		}
-	}
-#if 0
-	else
+	} else
 		reopen_input_devices();
-#endif
 	initialized = true;
 	lt_info("%s end\n", __FUNCTION__);
 }
@@ -302,11 +297,9 @@ void init_td_api()
 void shutdown_td_api()
 {
 	lt_info("%s, initialized = %d\n", __FUNCTION__, (int)initialized);
-#if 0
 	if (initialized) {
 		stop_inmux_thread();
 		close_input_devices();
 	}
-#endif
 	initialized = false;
 }
