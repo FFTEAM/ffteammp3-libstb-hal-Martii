@@ -7,12 +7,13 @@
 #include <stdint.h>
 #include "cs_types.h"
 #include <vector>
+#include <set>
 typedef std::vector<u16>			CaIdVector;
 typedef std::vector<u16>::iterator		CaIdVectorIterator;
 typedef std::vector<u16>::const_iterator	CaIdVectorConstIterator;
 
 enum CA_INIT_MASK {
-	CA_INIT_SC	= 1,
+	CA_INIT_SC = 1,
 	CA_INIT_CI,
 	CA_INIT_BOTH
 };
@@ -20,7 +21,7 @@ enum CA_INIT_MASK {
 enum CA_SLOT_TYPE {
 	CA_SLOT_TYPE_SMARTCARD,
 	CA_SLOT_TYPE_CI,
-	CA_SLOT_TYPE_ALL,
+	CA_SLOT_TYPE_ALL
 };
 
 enum CA_MESSAGE_FLAGS {
@@ -63,12 +64,17 @@ enum CA_MESSAGE_MSGID {
 	CA_MESSAGE_MSG_MMI_CLOSE,
 	CA_MESSAGE_MSG_INTERNAL,
 	CA_MESSAGE_MSG_PMT_ARRIVED,
+	CA_MESSAGE_MSG_CAPMT_ARRIVED,
 	CA_MESSAGE_MSG_CAT_ARRIVED,
 	CA_MESSAGE_MSG_ECM_ARRIVED,
 	CA_MESSAGE_MSG_EMM_ARRIVED,
 	CA_MESSAGE_MSG_CHANNEL_CHANGE,
-	CA_MESSAGE_MSG_EXIT,
+	CA_MESSAGE_MSG_GUI_READY,
+	CA_MESSAGE_MSG_EXIT
 };
+
+typedef std::set<int> ca_map_t;
+typedef ca_map_t::iterator ca_map_iterator_t;
 
 typedef struct CA_MESSAGE {
 	uint32_t MsgId;

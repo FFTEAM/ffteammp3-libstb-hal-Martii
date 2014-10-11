@@ -678,6 +678,7 @@ bool Input::GetMetadata(std::vector<std::string> &keys, std::vector<std::string>
 
 	if (avfc) {
 		AVDictionaryEntry *tag = NULL;
+
 		if (avfc->metadata)
 			while ((tag = av_dict_get(avfc->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
 				keys.push_back(tag->key);
