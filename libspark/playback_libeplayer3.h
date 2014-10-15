@@ -26,7 +26,7 @@ class cPlayback
 		playmode_t pm;
 		std::string fn_ts;
 		std::string fn_xml;
-		off64_t last_size;
+		off_t last_size;
 		int init_jump;
 		Player *player;
 		const char *(*ProgramSelectionCallback)(void *, std::vector<std::string> &keys, std::vector<std::string> &values);
@@ -61,10 +61,6 @@ class cPlayback
 		void RequestAbort(void);
 		bool IsPlaying(void);
 		uint64_t GetReadCount(void);
-		void FindAllSubs(uint16_t *pids, unsigned short *supported, uint16_t *numpida, std::string *language);
-		bool SelectSubtitles(int pid);
-		void GetTitles(std::vector<int> &playlists, std::vector<std::string> &titles, int &current);
-		void SetTitle(int title);
 
 		void GetChapters(std::vector<int> &positions, std::vector<std::string> &titles);
 		void GetMetadata(std::vector<std::string> &keys, std::vector<std::string> &values);
