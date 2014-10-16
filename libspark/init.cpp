@@ -268,10 +268,8 @@ void init_td_api()
 	{
 		cCpuFreqManager f;
 		f.SetCpuFreq(0);	/* CPUFREQ == 0 is the trigger for leaving standby */
-#if 0
 		create_input_devices();
 		start_inmux_thread();
-#endif
 
 		/* this is a strange hack: the drivers seem to only work correctly after
 		 * demux0 has been used once. After that, we can use demux1,2,... */
