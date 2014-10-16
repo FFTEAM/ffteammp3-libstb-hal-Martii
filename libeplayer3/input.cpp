@@ -68,9 +68,9 @@ int64_t Input::calcPts(AVStream * stream, int64_t pts)
 	if (pts == AV_NOPTS_VALUE)
 		pts = INVALID_PTS_VALUE;
 	else if (avfc->start_time == AV_NOPTS_VALUE)
-		pts = 90000.0 * (double) pts * av_q2d(stream->time_base);
+		pts = 90000.0 * (double) pts *av_q2d(stream->time_base);
 	else
-		pts = 90000.0 * (double) pts * av_q2d(stream->time_base) - 90000.0 * avfc->start_time / AV_TIME_BASE;
+		pts = 90000.0 * (double) pts *av_q2d(stream->time_base) - 90000.0 * avfc->start_time / AV_TIME_BASE;
 
 	if (pts & 0x8000000000000000ull)
 		pts = INVALID_PTS_VALUE;
@@ -428,9 +428,9 @@ again:
 	avfc->iformat->flags |= AVFMT_SEEK_TO_PTS;
 	avfc->flags = AVFMT_FLAG_GENPTS;
 	if (player->noprobe) {
-#if (LIBAVFORMAT_VERSION_MAJOR <  55) || \
-    (LIBAVFORMAT_VERSION_MAJOR == 55 && LIBAVFORMAT_VERSION_MINOR <  43) || \
-    (LIBAVFORMAT_VERSION_MAJOR == 55 && LIBAVFORMAT_VERSION_MINOR == 43 && LIBAVFORMAT_VERSION_MICRO < 100)
+#if (LIBAVFORMAT_VERSION_MAJOR <  56) || \
+    (LIBAVFORMAT_VERSION_MAJOR == 56 && LIBAVFORMAT_VERSION_MINOR <  43) || \
+    (LIBAVFORMAT_VERSION_MAJOR == 56 && LIBAVFORMAT_VERSION_MINOR == 43 && LIBAVFORMAT_VERSION_MICRO < 100)
 		avfc->max_analyze_duration = 1;
 #else
 		avfc->max_analyze_duration2 = 1;
