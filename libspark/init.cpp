@@ -291,10 +291,8 @@ void init_td_api()
 			close(dmx);
 		}
 	}
-#if 0
 	else
 		reopen_input_devices();
-#endif
 	initialized = true;
 	lt_info("%s end\n", __FUNCTION__);
 }
@@ -302,11 +300,9 @@ void init_td_api()
 void shutdown_td_api()
 {
 	lt_info("%s, initialized = %d\n", __FUNCTION__, (int)initialized);
-#if 0
 	if (initialized) {
 		stop_inmux_thread();
 		close_input_devices();
 	}
-#endif
 	initialized = false;
 }
