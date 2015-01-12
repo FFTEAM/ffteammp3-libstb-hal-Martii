@@ -1,6 +1,9 @@
 /*
  * dummy functions to implement ca_cs.h interface
  */
+#if HAVE_DUCKBOX_HARDWARE
+#include "ca_ci.h"
+#else
 #ifndef __CA_LIBTRIPLE_H_
 #define __CA_LIBTRIPLE_H_
 
@@ -21,18 +24,18 @@ enum CA_INIT_MASK {
 enum CA_SLOT_TYPE {
 	CA_SLOT_TYPE_SMARTCARD,
 	CA_SLOT_TYPE_CI,
-	CA_SLOT_TYPE_ALL
+	CA_SLOT_TYPE_ALL,
 };
 
 enum CA_MESSAGE_FLAGS {
 	CA_MESSAGE_EMPTY		= (1 << 0),
-	CA_MESSAGE_HAS_PARAM1_DATA	= (1 << 1), // Free after use!
+	CA_MESSAGE_HAS_PARAM1_DATA	= (1 << 1), /// Free after use!
 	CA_MESSAGE_HAS_PARAM1_INT	= (1 << 2),
 	CA_MESSAGE_HAS_PARAM1_PTR	= (1 << 3),
 	CA_MESSAGE_HAS_PARAM2_INT	= (1 << 4),
 	CA_MESSAGE_HAS_PARAM2_PTR	= (1 << 5),
 	CA_MESSAGE_HAS_PARAM2_DATA	= (1 << 6),
-	CA_MESSAGE_HAS_PARAM3_DATA	= (1 << 7), // Free after use!
+	CA_MESSAGE_HAS_PARAM3_DATA	= (1 << 7), /// Free after use!
 	CA_MESSAGE_HAS_PARAM3_INT	= (1 << 8),
 	CA_MESSAGE_HAS_PARAM3_PTR	= (1 << 9),
 	CA_MESSAGE_HAS_PARAM4_INT	= (1 << 10),
@@ -97,7 +100,7 @@ public:
 	uint32_t GetNumberSmartCardSlots(void);
 	static cCA *GetInstance(void);
 	bool SendPMT(int Unit, unsigned char *Data, int Len, CA_SLOT_TYPE SlotType = CA_SLOT_TYPE_ALL);
-	bool SendCAPMT(u64 /*Source*/, u8 /*DemuxSource*/, u8 /*DemuxMask*/, const unsigned char * /*CAPMT*/, u32 /*CAPMTLen*/, const unsigned char * /*RawPMT*/, u32 /*RawPMTLen*/) { return true; };
+	bool SendCAPMT(u64 /*Source*/, u8 /*DemuxSource*/, u8 /*DemuxMask*/, const unsigned char * /*CAPMT*/, u32 /*CAPMTLen*/, const unsigned char * /*RawPMT*/, u32 /*RawPMTLen*/,	unsigned char /*scrambled = 0*/, ca_map_t /*camap = std::set<int>()*/, int /*mode = 0*/, bool /*enabled = false*/) { return true; };
 	bool SendMessage(const CA_MESSAGE *Msg);
 	void SetInitMask(enum CA_INIT_MASK InitMask);
 	int GetCAIDS(CaIdVector & /*Caids*/) { return 0; };
@@ -116,3 +119,4 @@ public:
 };
 
 #endif // __CA_LIBTRIPLE_H_
+#endif // HAVE_DUCKBOX_HARDWARE
